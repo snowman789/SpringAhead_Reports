@@ -24,6 +24,7 @@ class Weekly_Report:
 
 class Project:
     def __init__(self, code, hours ):
+        self.name
         self.code = code
         self.hours = float(hours)
         self.proj_category = Proj_category.UNKNOWN
@@ -123,7 +124,14 @@ def get_employee(name):
         if employee.name == name:
             return employee
 
-def open_file(path):
+def open_files(path):
+    for filename in os.listdir(path):
+        if filename.endswith(".csv"):
+            dir_path = (os.path.join(path, filename))
+            pull_data(dir_path)
+
+
+def pull_data(path):
 
     #get user config
     configFilePath = os.getcwd() + '\config.txt'
@@ -133,12 +141,15 @@ def open_file(path):
 
 
 
-
     raw_data = open(str(path), encoding = 'utf8')
     csv_raw_data = csv.reader(raw_data)
 
     counter = 1
     employee = Employee("temp")
+
+
+
+
     for row in csv_raw_data:
 
 
@@ -199,13 +210,13 @@ def open_file(path):
 
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
-    path = r'C:\Users\iroberts\Desktop\Spring_Ahead\Raw Data\Aug 01-15.csv'
-    temp = open_file(path)
+    path = r'C:\Users\iroberts\Desktop\Spring_Ahead\Raw Data'
+    temp = open_files(path)
 
-    employee = employee_lst[0]
+    employee = employee_lst[1]
 
     weekly_report = employee.weekly_reports_lst[0]
-    project = weekly_report.proj_lst[2]
+    project = weekly_report.proj_lst[0]
     print("Employee name: " + str(employee.name))
     print("Employee's total hours: " + str(employee.total_hours))
     print("Project Name : " + str(project.code))
