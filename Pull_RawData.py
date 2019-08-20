@@ -36,6 +36,21 @@ class Employee:
         self.total_hours = 0
         self.weekly_reports_lst = []
 
+    def add_project(self, project):
+        project_exists = False
+
+        existing_project = project
+        for obj in self.projects:
+            if obj.code == project.code:
+                project_exists == True
+                existing_project = obj
+
+        if project_exists:
+            existing_project.hours += project.hours
+        else:
+            self.projects.append(project)
+
+
 def assign_project_category(config, name):
     temp_lst = name.split()
 
@@ -134,7 +149,7 @@ def open_file(path):
             report_To_Date = dates[1]
 
 
-
+        # where data starts
         if counter >= 9:
             #name_found
             if(cell_Is_A_Name(row[0])):
@@ -148,21 +163,26 @@ def open_file(path):
                 else:
                     employee = get_employee(name)
                     employee.weekly_reports_lst.append(Weekly_Report(report_From_Date, report_To_Date))
+
+            # This elif ensures there's actually a project in the row before trying to manipulate the data
             elif(row[0] != 'Total' and row[0] != 'Subtotal'):
 
+                # create project object for this row's data and append it to weekly report for this employee
                 project_code = row[1]
-
-
-
                 hours = float(row[2])
                 project = Project(project_code,hours)
-
-                # print(assign_project_category(config, project_code))
                 project.proj_category = assign_project_category(config, project_code)
-
-
                 weekly_report = employee.weekly_reports_lst[-1]
+                # append project
                 weekly_report.proj_lst.append(project)
+
+                # record data for summary report
+                employee.total_hours += hours
+                employee.add_project(project)
+
+
+
+
 
 
 
@@ -187,5 +207,10 @@ if __name__ == "__main__":
     weekly_report = employee.weekly_reports_lst[0]
     project = weekly_report.proj_lst[2]
     print("Employee name: " + str(employee.name))
+    print("Employee's total hours: " + str(employee.total_hours))
     print("Project Name : " + str(project.code))
     print("project category: " + str(project.proj_category))
+    print("Num hours: " + str(project.hours))
+
+    for project in employee.projects:
+        print(project.code + "    hours: " + str(project.hours))
