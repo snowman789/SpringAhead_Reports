@@ -23,9 +23,9 @@ class Weekly_Report:
         self.proj_lst = []
 
 class Project:
-    def __init__(self, code, hours ):
-        self.name
-        self.code = code
+    def __init__(self, name, hours):
+        self.name = name
+        self.code = 'no code defined'
         self.hours = float(hours)
         self.proj_category = Proj_category.UNKNOWN
 
@@ -42,7 +42,7 @@ class Employee:
 
         existing_project = project
         for obj in self.projects:
-            if obj.code == project.code:
+            if obj.name == project.name:
                 project_exists == True
                 existing_project = obj
 
@@ -179,10 +179,10 @@ def pull_data(path):
             elif(row[0] != 'Total' and row[0] != 'Subtotal'):
 
                 # create project object for this row's data and append it to weekly report for this employee
-                project_code = row[1]
+                project_name = row[1]
                 hours = float(row[2])
-                project = Project(project_code,hours)
-                project.proj_category = assign_project_category(config, project_code)
+                project = Project(project_name,hours)
+                project.proj_category = assign_project_category(config, project_name)
                 weekly_report = employee.weekly_reports_lst[-1]
                 # append project
                 weekly_report.proj_lst.append(project)
@@ -219,9 +219,9 @@ if __name__ == "__main__":
     project = weekly_report.proj_lst[0]
     print("Employee name: " + str(employee.name))
     print("Employee's total hours: " + str(employee.total_hours))
-    print("Project Name : " + str(project.code))
+    print("Project Name : " + str(project.name))
     print("project category: " + str(project.proj_category))
     print("Num hours: " + str(project.hours))
 
     for project in employee.projects:
-        print(project.code + "    hours: " + str(project.hours))
+        print(project.name + "    hours: " + str(project.hours))
