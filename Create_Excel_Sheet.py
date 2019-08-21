@@ -5,6 +5,13 @@ import Pull_RawData
 def write_employee(worksheet, employee, weekly_report, row, col, data_format, name_format, needs_attention_format,
                    percent_format):
 
+    smi_internal_total = weekly_report.weekly_hour_breakdown_lst[Pull_RawData.Proj_category.SMI_INTERNAL]
+    shine_sys_internal_total = weekly_report.weekly_hour_breakdown_lst[Pull_RawData.Proj_category.SHINE_SYS_INTERNAL]
+    my_vv_internal = weekly_report.weekly_hour_breakdown_lst[Pull_RawData.Proj_category.MY_VV_INTERNAL]
+    si_internal_total = weekly_report.weekly_hour_breakdown_lst[Pull_RawData.Proj_category.SI_INTERNAL]
+    shine_family_allocation = weekly_report.weekly_hour_breakdown_lst[Pull_RawData.Proj_category.SHINE_FAMILY_ALLOCATION]
+    pto_holiday_total = weekly_report.weekly_hour_breakdown_lst[Pull_RawData.Proj_category.PTO_FLOATING_HOLIDAY]
+
 
     worksheet.write(row, col, employee.name, name_format)
     col += 1
@@ -24,7 +31,9 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
         col += 1
         # print percentages
         # print percentage totals
-        for num in project.proj_hour_breakdown_lst:
+        for index in range(len(project.proj_hour_breakdown_lst) - 1 ):
+        # for num in project.proj_hour_breakdown_lst:
+            num = project.proj_hour_breakdown_lst[index]
             value_to_write = num / weekly_report.total_hours()
             worksheet.write(row, col, value_to_write, percent_format)
             col += 1
@@ -44,6 +53,9 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
         value_to_write = num / weekly_report.total_hours()
         worksheet.write(row, col, value_to_write, percent_format)
         col += 1
+    # print total internal
+    total_internal = smi_internal_total + shine_sys_internal_total + my_vv_internal + si_internal_total
+    worksheet.write(row, col, )
 
     row += 1
 

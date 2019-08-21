@@ -10,13 +10,14 @@ employee_lst = []
 report_name_lst = []
 
 class Proj_category(Enum):
-    UNKNOWN = 0
-    SMI_INTERNAL = 1
-    SHINE_SYS_INTERNAL = 2
-    MY_VV_INTERNAL = 3
-    SI_INTERNAL = 4
-    SHINE_FAMILY_ALLOCATION = 5
-    PTO_FLOATING_HOLIDAY = 6
+
+    SMI_INTERNAL = 0
+    SHINE_SYS_INTERNAL = 1
+    MY_VV_INTERNAL = 2
+    SI_INTERNAL = 3
+    SHINE_FAMILY_ALLOCATION = 4
+    PTO_FLOATING_HOLIDAY = 5
+    UNKNOWN = 6
 
 class Weekly_Report:
     def __init__(self, from_date, to_date):
@@ -73,18 +74,19 @@ class Employee:
 
 def assign_project_category(config, name):
     temp_lst = name.split()
-
-    code = temp_lst[0]
-
+    if '6SMI-000' in name:
+        code = name
+    else:
+        code = temp_lst[0]
 
     #consider moving this outside function if program speed is an issue
 
-    smi_internal = str(config['SMI_INTERNAL']).split(',')
-    shine_sys = str(config['SHINE_SYS_INTERNAL']).split(',')
-    my_vv = str(config['MY_VV_INTERNAL']).split(',')
-    si = str(config['SI_INTERNAL']).split(',')
-    shine_family_allocation = str(config['SHINE_FAMILY_ALLOCATION']).split(',')
-    pto_floating_holiday = str(config['PTO_FLOATING_HOLIDAY']).split(',')
+    smi_internal = str(config['SMI_INTERNAL']).split(';')
+    shine_sys = str(config['SHINE_SYS_INTERNAL']).split(';')
+    my_vv = str(config['MY_VV_INTERNAL']).split(';')
+    si = str(config['SI_INTERNAL']).split(';')
+    shine_family_allocation = str(config['SHINE_FAMILY_ALLOCATION']).split(';')
+    pto_floating_holiday = str(config['PTO_FLOATING_HOLIDAY']).split(';')
 
     if str_in_lst(code, smi_internal):
         return Proj_category.SMI_INTERNAL
