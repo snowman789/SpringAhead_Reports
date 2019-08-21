@@ -3,6 +3,7 @@ import datetime
 from enum import Enum
 import os
 import configparser
+import copy
 import Create_Excel_Sheet
 
 employee_lst = []
@@ -22,7 +23,14 @@ class Weekly_Report:
         self.from_date = from_date
         self.to_date = to_date
         self.proj_lst = []
+
         self.weekly_hour_breakdown_lst = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] #see enum to find indices
+
+    def total_hours(self):
+        total_hours = 0.0
+        for project in self.proj_lst:
+            total_hours += project.hours
+        return total_hours
 
 class Project:
     def __init__(self, name, hours):
@@ -30,6 +38,7 @@ class Project:
         self.code = 'no code defined'
         self.hours = float(hours)
         self.proj_category = Proj_category.UNKNOWN
+        self.proj_hour_breakdown_lst = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] #see enum to find indices
 
 class Employee:
     def __init__(self, name):
@@ -42,21 +51,24 @@ class Employee:
         self.weekly_index = 0
 
     def add_project(self, project):
+
         project_exists = False
 
-        existing_project = project
+
         for obj in self.projects:
             if obj.name == project.name:
                 project_exists = True
                 existing_project = obj
 
+                obj.hours += project.hours #THIS LINE IS THE PROBLEM
 
-        if project_exists:
-            existing_project.hours += project.hours
+                break
 
-        else:
-
+        if not project_exists:
             self.projects.append(project)
+
+
+
 
 
 def assign_project_category(config, name):
@@ -194,20 +206,28 @@ def pull_data(path):
                 # create project object for this row's data and append it to weekly report for this employee
                 project_name = row[1]
                 hours = float(row[2])
+                # print(hours)
                 project = Project(project_name,hours)
                 project.proj_category = assign_project_category(config, project_name)
                 weekly_report = employee.weekly_reports_lst[-1]
 
                 if project.proj_category == Proj_category.SHINE_FAMILY_ALLOCATION:
+                    project.proj_hour_breakdown_lst[Proj_category.SMI_INTERNAL.value] += (hours * .25)
+                    project.proj_hour_breakdown_lst[Proj_category.SHINE_SYS_INTERNAL.value] += (hours * .74)
+                    project.proj_hour_breakdown_lst[Proj_category.SI_INTERNAL.value] += (hours * .01)
 
                     weekly_report.weekly_hour_breakdown_lst[Proj_category.SMI_INTERNAL.value] += (hours * .25)
                     weekly_report.weekly_hour_breakdown_lst[Proj_category.SHINE_SYS_INTERNAL.value] += (hours * .74)
                     weekly_report.weekly_hour_breakdown_lst[Proj_category.SI_INTERNAL.value] += (hours * .01)
                 else:
                     weekly_report.weekly_hour_breakdown_lst[project.proj_category.value] += hours
+                    project.proj_hour_breakdown_lst[project.proj_category.value] += hours
 
                 # append project
-                weekly_report.proj_lst.append(project)
+
+                weekly_report.proj_lst.append(copy.deepcopy(project))
+                # print(weekly_report.proj_lst[0].hours)
+
 
                 # record data for summary report
                 if project.proj_category == Proj_category.SHINE_FAMILY_ALLOCATION:
@@ -216,6 +236,7 @@ def pull_data(path):
                     employee.hour_breakdown_lst[Proj_category.SI_INTERNAL.value] += (hours * .01)
                 else:
                     employee.hour_breakdown_lst[project.proj_category.value] += hours
+
                 employee.total_hours += hours
                 employee.add_project(project)
 
@@ -246,10 +267,10 @@ if __name__ == "__main__":
     report_path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\SpringAhead_test_reports' + time +'.xlsx'
     num_reports = open_files(path)
 
-    employee = employee_lst[1]
+    employee = employee_lst[0]
 
-    # Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
-    weekly_report = employee.weekly_reports_lst[2]
+    Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
+    weekly_report = employee.weekly_reports_lst[0]
     project = weekly_report.proj_lst[0]
     print("Employee name: " + str(employee.name))
     print("Employee's total hours: " + str(employee.total_hours))
