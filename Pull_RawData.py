@@ -10,9 +10,9 @@ employee_lst = []
 class Proj_category(Enum):
     UNKNOWN = 0
     SMI_INTERNAL = 1
-    SHINE_SYS = 2
-    MY_VV = 3
-    SI = 4
+    SHINE_SYS_INTERNAL = 2
+    MY_VV_INTERNAL = 3
+    SI_INTERNAL = 4
     SHINE_FAMILY_ALLOCATION = 5
     PTO_FLOATING_HOLIDAY = 6
 
@@ -21,6 +21,7 @@ class Weekly_Report:
         self.from_date = from_date
         self.to_date = to_date
         self.proj_lst = []
+        self.weekly_hour_breakdown_lst = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] #see enum to find indices
 
 class Project:
     def __init__(self, name, hours):
@@ -36,6 +37,7 @@ class Employee:
         self.projects = []
         self.total_hours = 0
         self.weekly_reports_lst = []
+        self.hour_breakdown_lst = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] #see enum to find indices
 
     def add_project(self, project):
         project_exists = False
@@ -43,12 +45,15 @@ class Employee:
         existing_project = project
         for obj in self.projects:
             if obj.name == project.name:
-                project_exists == True
+                project_exists = True
                 existing_project = obj
+
 
         if project_exists:
             existing_project.hours += project.hours
+
         else:
+
             self.projects.append(project)
 
 
@@ -61,20 +66,20 @@ def assign_project_category(config, name):
     #consider moving this outside function if program speed is an issue
 
     smi_internal = str(config['SMI_INTERNAL']).split(',')
-    shine_sys = str(config['SHINE_SYS']).split(',')
-    my_vv = str(config['MY_VV']).split(',')
-    si = str(config['SI']).split(',')
+    shine_sys = str(config['SHINE_SYS_INTERNAL']).split(',')
+    my_vv = str(config['MY_VV_INTERNAL']).split(',')
+    si = str(config['SI_INTERNAL']).split(',')
     shine_family_allocation = str(config['SHINE_FAMILY_ALLOCATION']).split(',')
     pto_floating_holiday = str(config['PTO_FLOATING_HOLIDAY']).split(',')
 
     if str_in_lst(code, smi_internal):
         return Proj_category.SMI_INTERNAL
     elif str_in_lst(code, shine_sys):
-        return Proj_category.SHINE_SYS
+        return Proj_category.SHINE_SYS_INTERNAL
     elif str_in_lst(code, my_vv):
-        return Proj_category.MY_VV
+        return Proj_category.MY_VV_INTERNAL
     elif str_in_lst(code, si):
-        return Proj_category.SI
+        return Proj_category.SI_INTERNAL
     elif str_in_lst(code, shine_family_allocation):
         return Proj_category.SHINE_FAMILY_ALLOCATION
     elif str_in_lst(code, pto_floating_holiday):
@@ -83,9 +88,10 @@ def assign_project_category(config, name):
         return Proj_category.UNKNOWN
 
 def str_in_lst(target, lst):
-    target = target.lower()
+    target = str(target).lower()
     for word in lst:
         word = str(word).lower()
+        word = word.strip()
         if word == target:
             return True
     return False
@@ -184,10 +190,25 @@ def pull_data(path):
                 project = Project(project_name,hours)
                 project.proj_category = assign_project_category(config, project_name)
                 weekly_report = employee.weekly_reports_lst[-1]
+
+                if project.proj_category == Proj_category.SHINE_FAMILY_ALLOCATION:
+
+                    weekly_report.weekly_hour_breakdown_lst[Proj_category.SMI_INTERNAL.value] += (hours * .25)
+                    weekly_report.weekly_hour_breakdown_lst[Proj_category.SHINE_SYS_INTERNAL.value] += (hours * .74)
+                    weekly_report.weekly_hour_breakdown_lst[Proj_category.SI_INTERNAL.value] += (hours * .01)
+                else:
+                    weekly_report.weekly_hour_breakdown_lst[project.proj_category.value] += hours
+
                 # append project
                 weekly_report.proj_lst.append(project)
 
                 # record data for summary report
+                if project.proj_category == Proj_category.SHINE_FAMILY_ALLOCATION:
+                    employee.hour_breakdown_lst[Proj_category.SMI_INTERNAL.value] += (hours * .25)
+                    employee.hour_breakdown_lst[Proj_category.SHINE_SYS_INTERNAL.value] += (hours * .74)
+                    employee.hour_breakdown_lst[Proj_category.SI_INTERNAL.value] += (hours * .01)
+                else:
+                    employee.hour_breakdown_lst[project.proj_category.value] += hours
                 employee.total_hours += hours
                 employee.add_project(project)
 
@@ -210,7 +231,7 @@ def pull_data(path):
 
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
-    path = r'C:\Users\iroberts\Desktop\Spring_Ahead\Raw Data'
+    path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\Raw Data'
     temp = open_files(path)
 
     employee = employee_lst[1]
