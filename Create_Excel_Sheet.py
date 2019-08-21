@@ -6,8 +6,12 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
 
     worksheet.write(row, col, employee.name, name_format)
     col += 1
-    row += 1
 
+
+    for i in range(col, 12):
+        worksheet.write(row, col, '', name_format)
+        col += 1
+    row += 1
     for project in weekly_report.proj_lst:
         col = 1
         worksheet.write(row, col, project.name, data_format)
@@ -57,7 +61,7 @@ def Create_Excel_File(report_file_path, employees, report_name_lst):
 
         name_format = workbook.add_format()
         name_format.set_text_wrap()
-        # name_format.set_border('top')
+        name_format.set_top()
 
 
         row=0
@@ -84,7 +88,7 @@ def Create_Excel_File(report_file_path, employees, report_name_lst):
 
 
                     break
-        print("we received " + str(hits) + " hits")
+
 
     workbook.close()
     os.startfile(report_file_path)

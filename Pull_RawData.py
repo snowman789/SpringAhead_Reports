@@ -248,15 +248,17 @@ if __name__ == "__main__":
 
     employee = employee_lst[1]
 
-    Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
-    weekly_report = employee.weekly_reports_lst[0]
+    # Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
+    weekly_report = employee.weekly_reports_lst[2]
     project = weekly_report.proj_lst[0]
     print("Employee name: " + str(employee.name))
     print("Employee's total hours: " + str(employee.total_hours))
-    print("Project Name : " + str(project.name))
-    print("project category: " + str(project.proj_category))
-    print("Num hours: " + str(project.hours))
+    # print("Project Name : " + str(project.name))
+    # print("project category: " + str(project.proj_category))
+    # print("Num hours: " + str(project.hours))
 
-    for project in employee.projects:
-        print(project.name + "    hours: " + str(project.hours))
+    for project in weekly_report.proj_lst:
+        print("Report: " + str(project.name) + "   hours: " + str(project.hours))
+
+
 
