@@ -56,12 +56,16 @@ class Employee:
         project_exists = False
 
 
-        for obj in self.projects:
-            if obj.name == project.name:
+        for item in self.projects:
+            if item.name == project.name:
                 project_exists = True
-                existing_project = obj
+                existing_project = item
+                # print("Before " + str(item.hours))
+                item.hours += project.hours #THIS LINE IS THE PROBLEM
+                for i in range(0, len(item.proj_hour_breakdown_lst)):
+                    item.proj_hour_breakdown_lst[i] += project.proj_hour_breakdown_lst[i]
 
-                obj.hours += project.hours #THIS LINE IS THE PROBLEM
+                # print("After " + str(item.hours))
 
                 break
 
@@ -148,6 +152,9 @@ def get_employee(name):
 
 def open_files(path):
     counter = 0
+    file_lst = os.listdir(path)
+    # for name in file_lst:
+    #     print(name)
     for filename in os.listdir(path):
         if filename.endswith(".csv"):
             dir_path = (os.path.join(path, filename))
@@ -256,7 +263,7 @@ def pull_data(path):
         counter +=1
 
 
-
+    employee_lst.sort(key = lambda employee: employee.name)
     return employee_lst
 
 # ----------------------------------------------------------------------
@@ -276,12 +283,14 @@ if __name__ == "__main__":
     project = weekly_report.proj_lst[0]
     print("Employee name: " + str(employee.name))
     print("Employee's total hours: " + str(employee.total_hours))
+    # for project in employee.projects:
+    #     print(project.name + "   hours: " + str(project.hours) + "   " + str(project.proj_hour_breakdown_lst))
     # print("Project Name : " + str(project.name))
     # print("project category: " + str(project.proj_category))
     # print("Num hours: " + str(project.hours))
 
-    for project in weekly_report.proj_lst:
-        print("Report: " + str(project.name) + "   hours: " + str(project.hours))
+    # for project in weekly_report.proj_lst:
+    #     print("Report: " + str(project.name) + "   hours: " + str(project.hours))
 
 
 
