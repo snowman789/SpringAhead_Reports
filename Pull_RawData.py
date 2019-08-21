@@ -3,9 +3,10 @@ import datetime
 from enum import Enum
 import os
 import configparser
+import Create_Excel_Sheet
 
 employee_lst = []
-
+report_name_lst = []
 
 class Proj_category(Enum):
     UNKNOWN = 0
@@ -38,6 +39,7 @@ class Employee:
         self.total_hours = 0
         self.weekly_reports_lst = []
         self.hour_breakdown_lst = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] #see enum to find indices
+        self.weekly_index = 0
 
     def add_project(self, project):
         project_exists = False
@@ -131,10 +133,13 @@ def get_employee(name):
             return employee
 
 def open_files(path):
+    counter = 0
     for filename in os.listdir(path):
         if filename.endswith(".csv"):
             dir_path = (os.path.join(path, filename))
             pull_data(dir_path)
+            counter += 1
+    return counter
 
 
 def pull_data(path):
@@ -153,7 +158,7 @@ def pull_data(path):
     counter = 1
     employee = Employee("temp")
 
-
+    report_name_saved = False
 
 
     for row in csv_raw_data:
@@ -164,6 +169,8 @@ def pull_data(path):
             dates = get_Report_Date(row)
             report_From_Date = dates[0]
             report_To_Date = dates[1]
+            if not report_name_saved:
+                report_name_lst.append([report_From_Date,report_To_Date])
 
 
         # where data starts
@@ -232,10 +239,16 @@ def pull_data(path):
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
     path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\Raw Data'
-    temp = open_files(path)
+    time = datetime.datetime.now().strftime("%m-%d-%y")
+
+    time = r'\Test report from '+ time
+
+    report_path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\SpringAhead_test_reports' + time +'.xlsx'
+    num_reports = open_files(path)
 
     employee = employee_lst[1]
 
+    Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
     weekly_report = employee.weekly_reports_lst[0]
     project = weekly_report.proj_lst[0]
     print("Employee name: " + str(employee.name))
@@ -246,3 +259,4 @@ if __name__ == "__main__":
 
     for project in employee.projects:
         print(project.name + "    hours: " + str(project.hours))
+
