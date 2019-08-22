@@ -3,7 +3,9 @@ import os
 import Pull_RawData
 
 def write_employee(worksheet, employee, weekly_report, row, col, data_format, name_format, needs_attention_format,
-                   percent_format):
+                   percent_format,tan_name_format,tan_format):
+
+
 
     # Find weekly percentages
     smi_internal_total = weekly_report.weekly_hour_breakdown_lst[Pull_RawData.Proj_category.SMI_INTERNAL.value]
@@ -19,7 +21,7 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
     total_external = (external_hours)/weekly_report.total_hours()
     weekly_total_percent = total_internal + total_shine_companies + total_external
 
-    worksheet.write(row, col, employee.name, name_format)
+    worksheet.write(row, col, employee.name, tan_name_format)
     col += 1
 
     # print headers
@@ -29,7 +31,10 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
     row += 1
     # print projects
     for project in weekly_report.proj_lst:
-        col = 1
+        project.calculate_percentages(weekly_report.total_hours())
+        col = 0
+        worksheet.write(row,col,'',tan_format)
+        col += 1
         worksheet.write(row, col, project.name, data_format)
         col += 1
         worksheet.write(row, col, project.hours, data_format)
@@ -41,15 +46,29 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
         # for num in project.proj_hour_breakdown_lst:
             num = project.proj_hour_breakdown_lst[index]
             value_to_write = num / weekly_report.total_hours()
-            worksheet.write(row, col, value_to_write, percent_format)
+            if value_to_write > 0:
+                worksheet.write(row, col, value_to_write, percent_format)
             col += 1
+
+        # total percentages
+        worksheet.write(row,col,project.internal_hours_percent, percent_format)
+        col += 1
+
+        worksheet.write(row,col, project.shine_companies_hours_percent, percent_format)
+        col += 1
+
+        worksheet.write(row, col, project.external_percent, percent_format)
+        col += 1
+
+        worksheet.write(row, col, project.total_percent, percent_format)
+
 
         col = 1
         row += 1
 
     # print subtotal
     col = 0
-    worksheet.write(row, col, 'Subtotal', data_format)
+    worksheet.write(row, col, 'Subtotal', needs_attention_format)
     col = 2
     worksheet.write(row, col, weekly_report.total_hours(), needs_attention_format)
     col += 1
@@ -59,6 +78,7 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
     for index in range(0,len(weekly_report.weekly_hour_breakdown_lst)-1):
         num = weekly_report.weekly_hour_breakdown_lst[index]
         value_to_write = num / weekly_report.total_hours()
+
         worksheet.write(row, col, value_to_write, percent_format)
         col += 1
     # print total internal
@@ -81,7 +101,7 @@ def write_employee(worksheet, employee, weekly_report, row, col, data_format, na
 
 
 def create_summary(worksheet, headers, header_format, first_report_date, last_report_date, employees, data_format, name_format, needs_attention_format,
-                   percent_format):
+                   percent_format, total_percent_format,tan_name_format,tan_format):
 
     row = 0
     col = 0
@@ -93,8 +113,9 @@ def create_summary(worksheet, headers, header_format, first_report_date, last_re
     row += 1
 
 
-
+    total_hours = 0
     for employee in employees:
+        total_hours += employee.total_hours
 
         smi_internal_total = employee.hour_breakdown_lst[Pull_RawData.Proj_category.SMI_INTERNAL.value]
         shine_sys_internal_total = employee.hour_breakdown_lst[Pull_RawData.Proj_category.SHINE_SYS_INTERNAL.value]
@@ -112,7 +133,7 @@ def create_summary(worksheet, headers, header_format, first_report_date, last_re
         weekly_total_percent = total_internal + total_shine_companies + total_external
 
         # write employee headers
-        worksheet.write(row, col, employee.name, name_format)
+        worksheet.write(row, col, employee.name, tan_name_format)
         col += 1
 
         # print headers
@@ -122,7 +143,11 @@ def create_summary(worksheet, headers, header_format, first_report_date, last_re
         row += 1
 
         for project in employee.projects:
-            col = 1
+
+            project.calculate_percentages(employee.total_hours)
+            col = 0
+            worksheet.write(row,col,'',tan_format)
+            col += 1
             worksheet.write(row, col, project.name, data_format)
             col += 1
             worksheet.write(row, col, project.hours, data_format)
@@ -137,16 +162,27 @@ def create_summary(worksheet, headers, header_format, first_report_date, last_re
                 num = project.proj_hour_breakdown_lst[index]
                 # print("num " + str(num) + " total hours " + str(employee.total_hours))
                 value_to_write = num / employee.total_hours
-                worksheet.write(row, col, value_to_write, percent_format)
+                if value_to_write > 0:
+                    worksheet.write(row, col, value_to_write, percent_format)
                 col += 1
 
+            # total percentages for each project
+            worksheet.write(row, col, project.internal_hours_percent, percent_format)
+            col += 1
 
+            worksheet.write(row, col, project.shine_companies_hours_percent, percent_format)
+            col += 1
+
+            worksheet.write(row, col, project.external_percent, percent_format)
+            col += 1
+
+            worksheet.write(row, col, project.total_percent, percent_format)
 
             col = 0
             row += 1
 
         col = 0
-        worksheet.write(row, col, 'Subtotal', data_format)
+        worksheet.write(row, col, 'Subtotal', needs_attention_format)
         col = 2
         worksheet.write(row, col, employee.total_hours, needs_attention_format)
         col += 1
@@ -159,20 +195,34 @@ def create_summary(worksheet, headers, header_format, first_report_date, last_re
             col += 1
 
 
-        worksheet.write(row, col, total_internal, percent_format)
+        worksheet.write(row, col, total_internal, total_percent_format)
         col += 1
 
-        worksheet.write(row, col, total_shine_companies, percent_format)
+        worksheet.write(row, col, total_shine_companies, total_percent_format)
         col += 1
 
-        worksheet.write(row, col, total_external, percent_format)
+        worksheet.write(row, col, total_external, total_percent_format)
         col += 1
 
-        worksheet.write(row, col, weekly_total_percent, percent_format)
+        worksheet.write(row, col, weekly_total_percent, total_percent_format)
         col += 1
 
         row += 1
         col = 0
+    # write total hours for summary
+    # print headers
+    for i in range(col, 13):
+        worksheet.write(row, col, '', name_format)
+        col += 1
+    row += 1
+
+    col = 1
+    
+    worksheet.write(row, col, 'Total Hours:', data_format)
+    col += 1
+    worksheet.write(row,col, total_hours, needs_attention_format)
+
+
     return 1
 
 def Create_Excel_File(report_file_path, employees, report_name_lst):
@@ -199,6 +249,22 @@ def Create_Excel_File(report_file_path, employees, report_name_lst):
     percent_format = workbook.add_format()
     percent_format.set_text_wrap()
     percent_format.set_num_format('0.00%')
+
+    total_percent_format = workbook.add_format()
+    total_percent_format.set_text_wrap()
+    total_percent_format.set_num_format('0.00%')
+    total_percent_format.set_bg_color('yellow')
+
+    tan_color = '#FFFFFF'
+    tan_name_format = workbook.add_format( )
+    # tan_name_format.set_text_wrap()
+    tan_name_format.set_top()
+    # tan_name_format.set_bg_color(tan_color)
+
+
+    tan_format = workbook.add_format()
+    tan_format.set_text_wrap()
+    # tan_format.set_bg_color(tan_color)
 
     name_format = workbook.add_format()
     name_format.set_text_wrap()
@@ -255,7 +321,7 @@ def Create_Excel_File(report_file_path, employees, report_name_lst):
                     hits += 1
                     employee.weekly_index = weekly_index + 1
                     row = write_employee(worksheet,employee,weekly_report,row,col,normal_format, name_format,
-                                         needs_attention_format, percent_format)
+                                         needs_attention_format, percent_format,tan_name_format,tan_format)
 
                     weekly_total_hours += weekly_report.total_hours()
                     break
@@ -271,13 +337,15 @@ def Create_Excel_File(report_file_path, employees, report_name_lst):
     # CREATE SUMMARY
     name = 'Summary ' + first_report_date + ' to ' + last_report_date
     worksheet = workbook.add_worksheet(name)
+    # worksheet.freeze_panes(1,0)
     worksheet.freeze_panes(1,0)
     worksheet.set_column(2, 15,12)
     worksheet.set_column('A:A', 19)
     worksheet.set_column('B:B', 55)
     create_summary(worksheet, headers, header_format, first_report_date, last_report_date, employees, normal_format,
                    name_format, needs_attention_format,
-                   percent_format)
+                   percent_format,total_percent_format,tan_name_format,tan_format)
+
 
 
     workbook.close()

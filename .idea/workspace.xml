@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a95d8e6-309f-437a-a166-9715c03dd914" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Config.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Create_Excel_Sheet.py" beforeDir="false" afterPath="$PROJECT_DIR$/Create_Excel_Sheet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pull_RawData.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pull_RawData.py" afterDir="false" />
     </list>
@@ -19,8 +21,8 @@
             <file pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/Pull_RawData.py">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="340">
-                    <caret line="104" column="19" selection-start-line="104" selection-start-column="9" selection-end-line="104" selection-end-column="19" />
+                  <state relative-caret-position="38">
+                    <caret line="110" column="4" selection-start-line="110" selection-start-column="4" selection-end-line="110" selection-end-column="4" />
                     <folding>
                       <element signature="e#0#10#0" expanded="true" />
                     </folding>
@@ -35,11 +37,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Create_Excel_Sheet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1678">
-              <caret line="142" lean-forward="true" selection-start-line="142" selection-end-line="142" />
+            <state relative-caret-position="294">
+              <caret line="218" lean-forward="true" selection-start-line="218" selection-end-line="218" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -47,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Config.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" column="23" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="23" />
+            <state relative-caret-position="102">
+              <caret line="6" column="127" selection-start-line="6" selection-start-column="127" selection-end-line="6" selection-end-column="127" />
             </state>
           </provider>
         </entry>
@@ -78,12 +80,15 @@
       <find>before</find>
       <find>str_in_lst</find>
       <find>we should</find>
-      <find>name</find>
       <find>first</find>
       <find>assign_project_category</find>
       <find>data_format</find>
       <find>print</find>
       <find>employee.name</find>
+      <find>total_external</find>
+      <find>total_percent_format</find>
+      <find>name</find>
+      <find>subtotal</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -92,9 +97,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/Pull_RawData.py" />
         <option value="$PROJECT_DIR$/Config.txt" />
         <option value="$PROJECT_DIR$/Create_Excel_Sheet.py" />
-        <option value="$PROJECT_DIR$/Pull_RawData.py" />
       </list>
     </option>
   </component>
@@ -209,7 +214,7 @@
       <window_info content_ui="combo" id="Project" order="0" weight="0.24983476" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" weight="0.3286119" />
+      <window_info anchor="bottom" id="Python Console" weight="0.13314448" />
       <window_info anchor="bottom" id="Terminal" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -224,30 +229,41 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Pull_RawData.py</url>
+          <line>62</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Create_Excel_Sheet.py">
+    <entry file="file://$PROJECT_DIR$/Pull_RawData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1678">
-          <caret line="142" lean-forward="true" selection-start-line="142" selection-end-line="142" />
+        <state relative-caret-position="38">
+          <caret line="110" column="4" selection-start-line="110" selection-start-column="4" selection-end-line="110" selection-end-column="4" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Config.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="23" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="23" />
+        <state relative-caret-position="102">
+          <caret line="6" column="127" selection-start-line="6" selection-start-column="127" selection-end-line="6" selection-end-column="127" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pull_RawData.py">
+    <entry file="file://$PROJECT_DIR$/Create_Excel_Sheet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="104" column="19" selection-start-line="104" selection-start-column="9" selection-end-line="104" selection-end-column="19" />
+        <state relative-caret-position="294">
+          <caret line="218" lean-forward="true" selection-start-line="218" selection-end-line="218" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#17#0" expanded="true" />
           </folding>
         </state>
       </provider>

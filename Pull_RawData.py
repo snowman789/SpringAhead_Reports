@@ -40,6 +40,38 @@ class Project:
         self.hours = float(hours)
         self.proj_category = Proj_category.UNKNOWN
         self.proj_hour_breakdown_lst = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ] #see enum to find indices
+        self.smi_internal_total = 0
+        self.shine_sys_internal_total = 0
+        self.my_vv_internal = 0
+        self.si_internal_total = 0
+        self.project_shine_family_allocation = 0
+        self.pto_holiday_total = 0
+        self.external_hours =  0
+        self.internal_hours_percent = 0
+        self.shine_companies_hours_percent = 0
+        self.external_percent = 0
+        self.total_percent = 0
+
+
+    def calculate_percentages(self, total_hours_for_week):
+        # project_percentages
+
+        self.smi_internal_total = self.proj_hour_breakdown_lst[Proj_category.SMI_INTERNAL.value]
+        self.shine_sys_internal_total = self.proj_hour_breakdown_lst[
+            Proj_category.SHINE_SYS_INTERNAL.value]
+        self.my_vv_internal = self.proj_hour_breakdown_lst[Proj_category.MY_VV_INTERNAL.value]
+        self.si_internal_total = self.proj_hour_breakdown_lst[Proj_category.SI_INTERNAL.value]
+        self.project_shine_family_allocation = self.proj_hour_breakdown_lst[
+            Proj_category.SHINE_FAMILY_ALLOCATION.value]
+        self.pto_holiday_total = self.proj_hour_breakdown_lst[
+            Proj_category.PTO_FLOATING_HOLIDAY.value]
+        self.external_hours = self.proj_hour_breakdown_lst[Proj_category.UNKNOWN.value]
+
+        self.internal_hours_percent = (self.smi_internal_total + self.pto_holiday_total) / total_hours_for_week
+        self.shine_companies_hours_percent = ( self.shine_sys_internal_total + self.my_vv_internal +
+                                               self.si_internal_total) /total_hours_for_week
+        self.external_percent = (self.external_hours) / total_hours_for_week
+        self.total_percent = self.internal_hours_percent + self.shine_companies_hours_percent + self.external_percent
 
 class Employee:
     def __init__(self, name):
@@ -231,6 +263,8 @@ def pull_data(path):
                 else:
                     weekly_report.weekly_hour_breakdown_lst[project.proj_category.value] += hours
                     project.proj_hour_breakdown_lst[project.proj_category.value] += hours
+                # calculate percentages
+
 
                 # append project
 
