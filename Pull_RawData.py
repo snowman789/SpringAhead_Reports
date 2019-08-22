@@ -305,9 +305,9 @@ if __name__ == "__main__":
     path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\Raw Data'
     time = datetime.datetime.now().strftime("%m-%d-%y")
 
-    time = r'\Test report from '+ time
 
-    report_path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\SpringAhead_test_reports' + time +'.xlsx'
+
+    report_path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems'
     num_reports = open_files(path)
 
     employee = employee_lst[0]

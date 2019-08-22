@@ -217,7 +217,7 @@ def create_summary(worksheet, headers, header_format, first_report_date, last_re
     row += 1
 
     col = 1
-    
+
     worksheet.write(row, col, 'Total Hours:', data_format)
     col += 1
     worksheet.write(row,col, total_hours, needs_attention_format)
@@ -226,13 +226,28 @@ def create_summary(worksheet, headers, header_format, first_report_date, last_re
     return 1
 
 def Create_Excel_File(report_file_path, employees, report_name_lst):
+    # get name for workbook. Rundundant code but it's chill
+    first_report_date = 0
+    last_report_date = 0
+    for i in range(0, len(report_name_lst)):
+        weekly_total_hours = 0
+        from_time = report_name_lst[i][0]
+        to_time = report_name_lst[i][1]
 
+        from_time_str = report_name_lst[i][0].strftime("%m-%d-%y")
 
+        to_time_str = report_name_lst[i][1].strftime("%m-%d-%y")
+        name = "Report " + str(from_time_str) + " to " + str(to_time_str)
+        # get date range for summary
+        if i == 0:
+            first_report_date = from_time_str
+        last_report_date = to_time_str
+
+    report_file_path = report_file_path + '\SpringAhead report from ' + first_report_date + ' to ' + last_report_date + '.xlsx'
     workbook = xlsxwriter.Workbook(report_file_path)
     headers = ['User', 'Project', 'Hours', 'SMI Internal', 'SHINE SYS Internal', 'My VV Internal', 'SI Internal',
                'SHINE Family Allocation', 'PTO/Floating / Holiday', 'Total Internal', 'SHINE Companies', 'External',
                 'Total']
-
 
 
     header_format = workbook.add_format()
