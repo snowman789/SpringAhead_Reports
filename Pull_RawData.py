@@ -187,11 +187,21 @@ def open_files(path):
     file_lst = os.listdir(path)
     # for name in file_lst:
     #     print(name)
+
+    configFilePath = os.getcwd() + '\config.txt'
+    configParser = configparser.RawConfigParser()
+    configParser.read(configFilePath)
+    config = configParser['DEFAULT']
+    file_paths = configParser['FILE_PATHS']
+    path = file_paths['RAW_DATA']
+    report_path = file_paths['SAVE_REPORT_PATH']
+    
     for filename in os.listdir(path):
         if filename.endswith(".csv"):
             dir_path = (os.path.join(path, filename))
             pull_data(dir_path)
             counter += 1
+    Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
     return counter
 
 
@@ -202,6 +212,9 @@ def pull_data(path):
     configParser = configparser.RawConfigParser()
     configParser.read(configFilePath)
     config = configParser['DEFAULT']
+    file_paths = configParser['FILE_PATHS']
+
+
 
 
 
@@ -298,6 +311,7 @@ def pull_data(path):
 
 
     employee_lst.sort(key = lambda employee: employee.name)
+
     return employee_lst
 
 # ----------------------------------------------------------------------
@@ -312,11 +326,11 @@ if __name__ == "__main__":
 
     employee = employee_lst[0]
 
-    Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
-    weekly_report = employee.weekly_reports_lst[0]
-    project = weekly_report.proj_lst[0]
-    print("Employee name: " + str(employee.name))
-    print("Employee's total hours: " + str(employee.total_hours))
+    # Create_Excel_Sheet.Create_Excel_File(report_path, employee_lst, report_name_lst)
+    # weekly_report = employee.weekly_reports_lst[0]
+    # project = weekly_report.proj_lst[0]
+    # print("Employee name: " + str(employee.name))
+    # print("Employee's total hours: " + str(employee.total_hours))
     # for project in employee.projects:
     #     print(project.name + "   hours: " + str(project.hours) + "   " + str(project.proj_hour_breakdown_lst))
     # print("Project Name : " + str(project.name))
