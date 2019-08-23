@@ -195,7 +195,7 @@ def open_files(path):
     file_paths = configParser['FILE_PATHS']
     path = file_paths['RAW_DATA']
     report_path = file_paths['SAVE_REPORT_PATH']
-    
+
     for filename in os.listdir(path):
         if filename.endswith(".csv"):
             dir_path = (os.path.join(path, filename))
