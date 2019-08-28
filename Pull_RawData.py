@@ -184,7 +184,7 @@ def get_employee(name):
 
 def open_files(path):
     counter = 0
-    file_lst = os.listdir(path)
+    
     # for name in file_lst:
     #     print(name)
 
@@ -195,6 +195,7 @@ def open_files(path):
     file_paths = configParser['FILE_PATHS']
     path = file_paths['RAW_DATA']
     report_path = file_paths['SAVE_REPORT_PATH']
+    file_lst = os.listdir(path)
 
     for filename in os.listdir(path):
         if filename.endswith(".csv"):
@@ -316,12 +317,13 @@ def pull_data(path):
 
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
-    path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\Raw Data'
-    time = datetime.datetime.now().strftime("%m-%d-%y")
-
-
-
-    report_path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems'
+    # path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems\Raw Data'
+    # time = datetime.datetime.now().strftime("%m-%d-%y")
+    #
+    #
+    #
+    # # report_path = r'C:\Users\isaac\OneDrive\Desktop\Shine_Systems'
+    path = 'five'
     num_reports = open_files(path)
 
     employee = employee_lst[0]
